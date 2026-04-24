@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+
+# Generierte UI und Resource Dateien (falls lokal kompiliert
+*_rc.py
+ui_*.py
+*.qmlc
+*.jsc
+
+# QtCreator / Designer Einstellung
+*.pro.user
+*.pro.user.*
+*.pyproject.user
+
+.qtcreator/
