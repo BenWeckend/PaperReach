@@ -1,6 +1,6 @@
 ## PaperReach (intelligent systems project)
 
-Agend based scientific paper Research tool.
+scientific paper Research tool.
 
 Workflow, Idea and Todos:
 - Will be made in Python using Qt
