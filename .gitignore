@@ -1,3 +1,5 @@
+
+# general
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,15 +8,24 @@ venv/
 ENV/
 .env
 
-# Generierte UI und Resource Dateien (falls lokal kompiliert
+# Generierte UI und Resource Dateien
 *_rc.py
 ui_*.py
 *.qmlc
 *.jsc
 
-# QtCreator / Designer Einstellung
+# QtCreator stuff
 *.pro.user
 *.pro.user.*
 *.pyproject.user
 
 .qtcreator/
+
+# sphinx stuff
+build/
+docs/build/
+docs/_build/
+docs/generated/
+docs/source/_autosummary/
+
+
