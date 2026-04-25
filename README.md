@@ -18,5 +18,5 @@ Workflow, Idea and Todos:
 
 Phase 1: Input → Keyword Search → Paper Liste anzeigen
 
-[ ] PlantUML Structure
+- [ ] PlantUML Structure
 
