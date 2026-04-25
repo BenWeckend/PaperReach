@@ -6,6 +6,8 @@ __pycache__/
 .venv/
 venv/
 ENV/
+
+# Wichtig! sonst ist mein semantic scolar API Key public
 .env
 
 # Generierte UI und Resource Dateien
