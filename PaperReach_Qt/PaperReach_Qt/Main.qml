@@ -15,6 +15,62 @@ Window {
     color: "transparent"
     flags: Qt.FramelessWindowHint | Qt.Window // Window Hint hinzugefügt, damit es in der Taskleiste bleibt
 
+
+    // titelleiste ist Buggy: ist aber ok für jetzt
+    Rectangle {
+        id: mainContent
+        anchors.fill: parent
+        anchors.margins: 20
+        color: "#f0f0f0"
+        radius: 10
+
+        //  TITELLEISTE
+        Rectangle {
+            id: titleBar
+            width: parent.width
+            height: 40
+            color: "transparent"
+            radius: 10
+            anchors.top: parent.top
+
+            // Verhindert, dass die unteren Ecken auch rund sind
+            Rectangle {
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height: parent.height / 2
+                color: parent.color
+                z: -1
+            }
+
+            Text {
+                text: "PaperReach"
+                color: "white"
+                anchors.centerIn: parent
+            }
+
+            // Qt 6 DragHandler
+            DragHandler {
+                onActiveChanged: if (active) root.startSystemMove()
+            }
+
+            // Schließen Button
+            Button {
+                text: "✕"
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.rightMargin: 10
+                width: 30; height: 30
+
+                onClicked: root.close() // Schließt die Applikation
+
+                background: Rectangle {
+                    color: parent.down ? "#aa3333" : (parent.hovered ? "#ff4444" : "transparent")
+                    radius: 5
+                }
+            }
+        }
+    }
+
     // Das Haupt-Container-Rectangle (damit der Schatten Platz hat)
     Rectangle {
         id: mainBackground
@@ -23,14 +79,14 @@ Window {
         color: "#f5f5f5"    // Hintergrundfarbe der App
         radius: 10
 
-        // 2. DER SCHATTEN für das gesamte Fenster
+        // Schatten
         DropShadow {
             anchors.fill: mainBackground
             horizontalOffset: 0
             verticalOffset: 2
             radius: 12.0
             samples: 25
-            color: "#40000000" // Sanfter Schatten
+            color: "#40000000"
             source: mainBackground
             z: -1 // Hinter dem Inhalt zeichnen
         }
