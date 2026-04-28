@@ -16,60 +16,7 @@ Window {
     flags: Qt.FramelessWindowHint | Qt.Window // Window Hint hinzugefügt, damit es in der Taskleiste bleibt
 
 
-    // titelleiste ist Buggy: ist aber ok für jetzt
-    Rectangle {
-        id: mainContent
-        anchors.fill: parent
-        anchors.margins: 20
-        color: "#f0f0f0"
-        radius: 10
 
-        //  TITELLEISTE
-        Rectangle {
-            id: titleBar
-            width: parent.width
-            height: 40
-            color: "transparent"
-            radius: 10
-            anchors.top: parent.top
-
-            // Verhindert, dass die unteren Ecken auch rund sind
-            Rectangle {
-                anchors.bottom: parent.bottom
-                width: parent.width
-                height: parent.height / 2
-                color: parent.color
-                z: -1
-            }
-
-            Text {
-                text: "PaperReach"
-                color: "white"
-                anchors.centerIn: parent
-            }
-
-            // Qt 6 DragHandler
-            DragHandler {
-                onActiveChanged: if (active) root.startSystemMove()
-            }
-
-            // Schließen Button
-            Button {
-                text: "✕"
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.rightMargin: 10
-                width: 30; height: 30
-
-                onClicked: root.close() // Schließt die Applikation
-
-                background: Rectangle {
-                    color: parent.down ? "#aa3333" : (parent.hovered ? "#ff4444" : "transparent")
-                    radius: 5
-                }
-            }
-        }
-    }
 
     // Das Haupt-Container-Rectangle (damit der Schatten Platz hat)
     Rectangle {
@@ -78,6 +25,61 @@ Window {
         anchors.margins: 15 // Platz für den Schatten
         color: "#f5f5f5"    // Hintergrundfarbe der App
         radius: 10
+
+        // titelleiste ist Buggy: ist aber ok für jetzt
+        Rectangle {
+            id: mainContent
+            anchors.fill: parent
+            anchors.margins: 0
+            color: "#f0f0f0"
+            radius: 10
+
+            //  TITELLEISTE
+            Rectangle {
+                id: titleBar
+                width: parent.width
+                height: 40
+                color: "transparent"
+                radius: 10
+                anchors.top: parent.top
+
+                // Verhindert, dass die unteren Ecken auch rund sind
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    height: parent.height / 2
+                    color: parent.color
+                    z: -1
+                }
+
+                //Text {
+                //    text: "PaperReach"
+                //    color: "white"
+                //    anchors.centerIn: parent
+                //}
+
+                // Qt 6 DragHandler
+                DragHandler {
+                    onActiveChanged: if (active) root.startSystemMove()
+                }
+
+                // Schließen Button
+                //Button {
+                //    text: "✕"
+                //    anchors.right: parent.right
+                //    anchors.verticalCenter: parent.verticalCenter
+                //    anchors.rightMargin: 10
+                //    width: 30; height: 30
+//
+                //    onClicked: root.close() // Schließt die Applikation
+//
+                //    background: Rectangle {
+                //        color: parent.down ? "#aa3333" : (parent.hovered ? "#ff4444" : "transparent")
+                //        radius: 5
+                //    }
+                //}
+            }
+        }
 
         // Schatten
         DropShadow {
@@ -215,7 +217,56 @@ Window {
                 color: "#ffffff"
                 border.color: "#e6e6e6"
                 radius: 8
+                clip: true // WICHTIG: Verhindert, dass Inhalt über die abgerundeten Ecken hinausragt
+
+                ScrollView {
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                    ListView {
+                        id: resultList
+                        spacing: 10
+                        model: 5
+
+                        delegate: Rectangle {
+                            width: resultList.width
+                            height: Math.min(parent.height / 3, 150) // Max 1/4 der Höhe, aber festes Limit
+                            color: "#fcfcfc"
+                            border.color: "#eeeeee"
+                            radius: 6
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 15
+
+                                Text {
+                                    font.family: "Helvetica"
+                                    text: "Ergebnis Titel #" + (index + 1)
+                                    // font.weight: Font.Bold
+                                    color: "#333333"
+                                }
+
+                                Text {
+                                    text: "Hier steht der dynamischer Text. Da das Element scrollbar ist, kannst du beliebig viele dieser Boxen untereinander anzeigen lassen. Hier steht der dynamischer Text. Da das Element scrollbar ist, kannst du beliebig viele dieser Boxen untereinander anzeigen lassen."
+                                    wrapMode: Text.WordWrap
+                                    Layout.fillWidth: true
+                                    color: "#666666"
+                                    elide: Text.ElideRight
+                                    maximumLineCount: 3
+                                }
+                                Text {
+                                    font.family: "Helvetica"
+                                    text: "BibTeX"
+                                    font.weight: Font.StyleItalic
+                                    color: "#333333"
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
         }
     }
 }
