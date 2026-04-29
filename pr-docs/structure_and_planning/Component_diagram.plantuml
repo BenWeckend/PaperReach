@@ -1,0 +1,63 @@
+@startuml
+title LitAgent - Agent-based Architecture
+
+package "Frontend (Qt / QML)" {
+  [Chat UI]
+  [Paper List UI]
+  [Paper Detail UI]
+}
+
+package "Application Layer (Python / PySide6)" {
+  [AppController]
+  [Search Orchestrator]
+  [Paper Repository]
+}
+
+package "Agent System" {
+  [Query Agent]
+  [Retrieval Agent]
+  [Ranking Agent]
+  [Claim Matching Agent]
+  [Decision Agent]
+  [Citation Agent]
+}
+
+package "External APIs" {
+  [Semantic Scholar API]
+  [arXiv API]
+  [CrossRef API]
+}
+
+' UI interactions
+[Chat UI] --> [AppController]
+[Paper List UI] --> [Paper Repository]
+[Paper Detail UI] --> [Paper Repository]
+
+' Controller
+[AppController] --> [Search Orchestrator]
+
+' Orchestration
+[Search Orchestrator] --> [Query Agent]
+[Search Orchestrator] --> [Retrieval Agent]
+[Search Orchestrator] --> [Ranking Agent]
+[Search Orchestrator] --> [Claim Matching Agent]
+[Search Orchestrator] --> [Decision Agent]
+[Search Orchestrator] --> [Citation Agent]
+
+' Agent interactions
+[Query Agent] --> [Retrieval Agent]
+[Retrieval Agent] --> [Ranking Agent]
+[Ranking Agent] --> [Claim Matching Agent]
+
+' Decision flow
+[Claim Matching Agent] --> [Decision Agent]
+[Decision Agent] --> [Query Agent] : refine queries
+[Decision Agent] --> [Retrieval Agent] : fetch more
+[Decision Agent] --> [Citation Agent] : finalize results
+
+' APIs
+[Retrieval Agent] --> [Semantic Scholar API]
+[Retrieval Agent] --> [arXiv API]
+[Retrieval Agent] --> [CrossRef API]
+
+@enduml
