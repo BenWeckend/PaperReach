@@ -1,5 +1,5 @@
 @startuml
-title LitAgent - Agent-based Architecture
+title LitAgent/PaperReach - Agent-based Architecture
 
 package "Frontend (Qt / QML)" {
   [Chat UI]
