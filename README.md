@@ -1,4 +1,4 @@
-## PaperReach (intelligent systems project)
+## PaperReach/LitAgend (intelligent systems project)
 
 scientific paper Research tool.
 
