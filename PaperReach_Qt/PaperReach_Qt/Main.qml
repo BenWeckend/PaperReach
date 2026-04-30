@@ -205,7 +205,7 @@ Window {
 
                     Text {
                         anchors.centerIn: parent
-                        text: "Generated Queries"
+                        text: "Papers found"
                         color: "#616161"
                     }
                 }
@@ -227,11 +227,11 @@ Window {
                     ListView {
                         id: resultList
                         spacing: 10
-                        model: 5
+                        model: 1
 
                         delegate: Rectangle {
                             width: resultList.width
-                            height: Math.min(parent.height / 3, 150) // Max 1/4 der Höhe, aber festes Limit
+                            height: Math.min(resultList.height / 3, 150) // Max 1/3 der Höhe, aber festes Limit
                             color: "#fcfcfc"
                             border.color: "#eeeeee"
                             radius: 6
