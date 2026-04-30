@@ -207,6 +207,25 @@ Window {
                         anchors.centerIn: parent
                         text: "Papers found"
                         color: "#616161"
+                        visible: paperList.count === 0
+                    }
+
+                    ScrollView {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                        ListView {
+                            id:paperList
+                            spacing: 5
+                            model: 0
+
+                            delegate: Text {
+                                id: name
+                                text: "Bonjour"
+                                color: "#3b3939"
+                            }
+                        }
                     }
                 }
             }
