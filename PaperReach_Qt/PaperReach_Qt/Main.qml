@@ -143,7 +143,7 @@ Window {
                             color: parent.down ? "#2a6edb" : (parent.hovered ? "#4a96ff" : "#3a86ff")
                             radius: 4
                         }
-                        onClicked: backend.process_text(inputField.text)
+                        onClicked: backend.make_query(inputField.text)
                     }
 
                     Text {
