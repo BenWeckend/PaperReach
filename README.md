@@ -2,6 +2,8 @@
 
 scientific paper Research tool.
 
+**Idea**: Paste entire Paragraphs into the tool and it will research and rate scientific Papers that match the given claim.
+
 Workflow, Idea and Todos:
 - Will be made in Python using Qt
 
@@ -16,8 +18,10 @@ Workflow, Idea and Todos:
     - (maybe some Citation Agend)
 3. Output Layer with UI
 
-Phase 1: Input → Keyword Search → Paper Liste anzeigen
-
+Phase 0: Basic UI erstellen
+Phase 1: Input → Keyword Search → Querys erzeugen
+Phase 2: Papers durch die semanticscholar und arXiv API beziehen und als Liste anzeigen
+Phase 3: Inhalt der Paper auslesen und im Bezug zum gegebenden Text bewerteten lassen.
 Phase ... : Server backend aufsetzten das die API Anfragen macht und die Infos an den User weiterleitet. (So kann man den API Key nicht aus dem Binarydekompilieren)
 
 - [x] PlantUML Structure
