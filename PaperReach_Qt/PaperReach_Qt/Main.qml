@@ -143,6 +143,7 @@ Window {
                             color: parent.down ? "#2a6edb" : (parent.hovered ? "#4a96ff" : "#3a86ff")
                             radius: 4
                         }
+                        onClicked: backend.process_text(inputField.text)
                     }
 
                     Text {
@@ -218,7 +219,7 @@ Window {
                         ListView {
                             id:paperList
                             spacing: 5
-                            model: 0
+                            model: 10
 
                             delegate: Text {
                                 id: name
@@ -246,7 +247,7 @@ Window {
                     ListView {
                         id: resultList
                         spacing: 10
-                        model: 1
+                        model: 10
 
                         delegate: Rectangle {
                             width: resultList.width

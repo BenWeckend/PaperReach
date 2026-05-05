@@ -20,6 +20,7 @@ class Backend(QObject):
         self.textChanged.emit(result)
 
 
+
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
