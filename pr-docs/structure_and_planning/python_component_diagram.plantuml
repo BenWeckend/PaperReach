@@ -13,7 +13,6 @@ package "External APIs" {
 }
 
 
-
 [make_query] --> [print_query]
 [make_query] --> [search_paper]
 [make_query] --> (groq API)
