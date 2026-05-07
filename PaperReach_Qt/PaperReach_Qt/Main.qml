@@ -243,56 +243,102 @@ Window {
                 color: "#ffffff"
                 border.color: "#e6e6e6"
                 radius: 8
-                clip: true // WICHTIG: Verhindert, dass Inhalt über die abgerundeten Ecken hinausragt
+                clip: true
 
-                ScrollView {
+                ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 10
-                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                    spacing: 0
 
-                    ListView {
-                        id: resultList
-                        spacing: 10
-                        model: 10
+                    // gedrücktes Paper Element von unten (1/3 der Höhe)
+                    Rectangle {
+                        id: infoBlock
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: parent.height / 3
+                        color: "#fdfdfd" // Leicht abgesetzte Farbe
+                        border.color: "#eeeeee"
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Zusatzinfos erscheinen hier"
+                            color: "#95a5a6"
+                            font.italic: true
+                        }
 
-                        delegate: Rectangle {
-                            width: resultList.width
-                            height: Math.min(resultList.height / 3, 150) // Max 1/3 der Höhe, aber festes Limit
-                            color: "#fcfcfc"
-                            border.color: "#eeeeee"
-                            radius: 6
+                        // Trennlinie zum unteren Block
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            height: 1
+                            color: "#e6e6e6"
+                        }
+                    }
 
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: 15
+                    // Alle Paper (2/3 der Höhe)
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        spacing: 15
+                        Layout.margins: 20
 
-                                Text {
-                                    font.family: "Helvetica"
-                                    text: "Ergebnis Titel #" + (index + 1)
-                                    // font.weight: Font.Bold
-                                    color: "#333333"
-                                }
+                        Text {
+                            text: "Ergebnisse"
+                            font.pointSize: 12
+                            font.weight: Font.Medium
+                            color: "#7f8c8d"
+                        }
 
-                                Text {
-                                    text: "Hier steht der dynamischer Text. Da das Element scrollbar ist, kannst du beliebig viele dieser Boxen untereinander anzeigen lassen. Hier steht der dynamischer Text. Da das Element scrollbar ist, kannst du beliebig viele dieser Boxen untereinander anzeigen lassen."
-                                    wrapMode: Text.WordWrap
-                                    Layout.fillWidth: true
-                                    color: "#666666"
-                                    elide: Text.ElideRight
-                                    maximumLineCount: 3
-                                }
-                                Text {
-                                    font.family: "Helvetica"
-                                    text: "BibTeX"
-                                    font.weight: Font.StyleItalic
-                                    color: "#333333"
+                        ScrollView {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            clip: true
+                            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                            ListView {
+                                id: resultList
+                                spacing: 10
+                                model: 10
+                                width: parent.width // Wichtig für die Breite der Delegates
+
+                                delegate: Rectangle {
+                                    width: resultList.width
+                                    height: 150 
+                                    color: "#fcfcfc"
+                                    border.color: "#eeeeee"
+                                    radius: 6
+                                    // Tipp-geste hinzufügen
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            // Hier später die Logik für exra Info
+                                            console.log("Gedrückt auf Index: " + index)
+                                        }
+                                    }
+
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.margins: 15
+
+                                        Text {
+                                            text: "Ergebnis Titel #" + (index + 1)
+                                            color: "#333333"
+                                            font.weight: Font.Bold
+                                        }
+
+                                        Text {
+                                            text: "Dynamischer Text für dieses Element..."
+                                            wrapMode: Text.WordWrap
+                                            Layout.fillWidth: true
+                                            color: "#666666"
+                                            elide: Text.ElideRight
+                                            maximumLineCount: 3
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-
         }
     }
 }
