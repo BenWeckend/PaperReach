@@ -1,16 +1,25 @@
-# This Python file uses the following encoding: utf-8
+#!/usr/bin/env python3
+
 import sys
 from pathlib import Path
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Slot, Signal
+from PySide6.QtCore import QObject, Slot, Signal, Property
 
 from openai import OpenAI
 import os
 
 class Backend(QObject):
+    def __init__(self):
+        super().__init__()
+        self._query_result = "" # Interner Speicher
+
     textChanged = Signal(str)
+
+    @Property(str, notify=textChanged)
+    def query_result(self):
+        return self._query_result
 
     @Slot(str)
     def make_query(self, text):
@@ -20,14 +29,14 @@ class Backend(QObject):
         )
 
         response = client.responses.create(
-            input="Give me as output only 10 two to three word sentences, nothing more. Each text represents the following text as best as possible. The sentences are what could be used as part of a title of a Paper: " + text ,
+            input="Give me as output only 12 two to four word sentences, nothing more. Each text represents the following text as best as possible. The sentences are what could be used as part of a title of a Paper: " + text ,
             model="openai/gpt-oss-20b",
         )
 
-        print("Eingabe:", response.output_text)
-        result = text.lower()
-        self.textChanged.emit(result)
-
+        print("Ausgabe:", response.output_text)
+        query_result = response.output_text
+        self._query_result = query_result
+        self.textChanged.emit(query_result)
 
 
 if __name__ == "__main__":

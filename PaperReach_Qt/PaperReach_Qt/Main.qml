@@ -2,16 +2,16 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
-import Qt5Compat.GraphicalEffects // WICHTIG für DropShadow in Qt 6
+import Qt5Compat.GraphicalEffects
 
 Window {
     id: root
-    width: 1100
-    height: 800
+    width: 1400
+    height: 900
     visible: true
     title: qsTr("PaperReach")
 
-    // 1. SCHATTEN-SETUP: Fensterhintergrund unsichtbar machen
+    // Fensterhintergrund unsichtbar machen
     color: "transparent"
     flags: Qt.FramelessWindowHint | Qt.Window // Window Hint hinzugefügt, damit es in der Taskleiste bleibt
 
@@ -22,11 +22,11 @@ Window {
     Rectangle {
         id: mainBackground
         anchors.fill: parent
-        anchors.margins: 15 // Platz für den Schatten
+        anchors.margins: 15
         color: "#f5f5f5"    // Hintergrundfarbe der App
         radius: 10
 
-        // titelleiste ist Buggy: ist aber ok für jetzt
+        // titelleiste ist Buggy: ist aber ok für jetzt... :/
         Rectangle {
             id: mainContent
             anchors.fill: parent
@@ -93,7 +93,7 @@ Window {
             z: -1 // Hinter dem Inhalt zeichnen
         }
 
-        // --- AB HIER IHR BESTEHENDER CONTENT ---
+        // --- wenn kein Bock auf schatten, einfach nur das nehmen :) ---
         RowLayout {
             anchors.fill: parent
             spacing: 15
@@ -206,28 +206,34 @@ Window {
 
                     Text {
                         anchors.centerIn: parent
-                        text: "Papers found"
+                        text: "Querys werden hier angezeigt"
                         color: "#616161"
-                        visible: paperList.count === 0
+                        visible: backend.query_result === ""
                     }
 
                     ScrollView {
+                        id: resultScroll
                         anchors.fill: parent
                         anchors.margins: 10
+                        clip: true 
                         ScrollBar.vertical.policy: ScrollBar.AsNeeded
 
-                        ListView {
-                            id:paperList
-                            spacing: 5
-                            model: 10
+                        Text {
+                            
+                            width: resultScroll.availableWidth //breite an scrollview anpassen
 
-                            delegate: Text {
-                                id: name
-                                text: "Bonjour"
-                                color: "#3b3939"
-                            }
+                            text: backend.query_result
+                            lineHeight: 1.4
+                            color: '#191818'
+                            wrapMode: Text.WordWrap
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            height: Math.max(resultScroll.availableHeight, implicitHeight)
                         }
                     }
+
                 }
             }
 
