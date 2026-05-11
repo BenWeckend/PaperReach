@@ -280,7 +280,7 @@ Window {
                         Layout.margins: 20
 
                         Text {
-                            text: "Ergebnisse"
+                            text: "Ergebnisse in relation zum eingegebenen Text:"
                             font.pointSize: 12
                             font.weight: Font.Medium
                             color: "#7f8c8d"
