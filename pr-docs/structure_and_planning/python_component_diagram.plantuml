@@ -12,24 +12,31 @@ package "External APIs" {
   (groq API)
 }
 
+database "sqLite Database" as db
 
 [make_query] --> [print_query]
 [make_query] --> [search_paper]
-[make_query] --> (groq API)
+[make_query] <--> (groq API)
 
 [search_paper] --> [get_paper_content] 
-[search_paper] --> [get_semanticscolar] 
-[search_paper] --> [get_arXiv]
+[search_paper] <--> [get_semanticscolar] 
+[search_paper] <--> [get_arXiv]
+[search_paper] --> db
 
-[get_semanticscolar] --> (Semantic Scholar API)
-[get_arXiv] --> (arXiv API)
+[get_semanticscolar] <--> (Semantic Scholar API)
+[get_arXiv] <--> (arXiv API)
 
 
 [search_paper] --> [print_paper_list]
+[print_paper_list] <-- db
+
 
 [get_paper_content] --> [analyse_rate_paper_content]
-[analyse_rate_paper_content] --> [print_top_matches]
-[analyse_rate_paper_content] --> (groq API)
+[analyse_rate_paper_content] --> [print_top_match]
+[analyse_rate_paper_content] <--> (groq API)
+[analyse_rate_paper_content] <--> db
 
-
+[print_paper_list] --> client_output
+[print_query] --> client_output
+[print_top_match] --> client_output
 @enduml
