@@ -3,6 +3,7 @@
 import sys
 import os
 from pathlib import Path
+import requests
 
 from PySide6.QtCore import (
     QObject,
@@ -16,13 +17,16 @@ from PySide6.QtQml import QQmlApplicationEngine
 
 from openai import OpenAI
 
+from providers.semantic_scholar import search_semantic_scholar
+from providers.arXiv import search_arxiv
+
 # Worker
 class QueryWorker(QObject):
     finished = Signal(str)
     error = Signal(str)
 
     @Slot(str)
-    def run_query(self, text):
+    def make_query(self, text):
         try:
             client = OpenAI(
                 api_key=os.environ.get("GROQ_API_KEY"),
@@ -40,12 +44,46 @@ class QueryWorker(QObject):
                 model="openai/gpt-oss-20b",
             )
 
-            result = response.output_text
-            self.finished.emit(result)
+            keywords = response.output_text
+            print("Generierte Keywords:", keywords)
+            self.finished.emit(keywords)
 
+            # keywords bei jeder neuen Zeile Trennen und als Liste speichern
+            keywords_list = keywords.split("\n")
+            print("Keywords Liste:", keywords_list)
+
+
+            for kw in keywords_list:
+                print(f"Suche nach: {kw}")
+                papers_arXiv = search_arxiv(kw)
+                print(f"Gefundene Paper aus arXiv für '{kw}':")
+                for paper in papers_arXiv:
+                    print(f"  - {paper['title']}")
+                    print(f"    Autoren: {paper['authors']}")
+                    print(f"    URL: {paper['url']}")
+                    print()
+
+            #keywords_test = "machine learning"
+            #papers_arXiv = search_arxiv(keywords_test)
+            #print("Gefundene Paper aus arXiv:")
+            #for paper in papers_arXiv:
+            #    print(f"  - {paper['title']}")
+            #    print(f"    Autoren: {paper['authors']}")
+            #    print(f"    URL: {paper['url']}")
+            #    print()
+
+            # Übergebe die Keywords an search_semantic_scholar
+            #papers = search_semantic_scholar(keywords_test)
+            #print("Gefundene Paper aus Semantic Scholar:")
+            #for paper in papers:
+            #    print(f"  - {paper['title']}")
+            #    print(f"    Autoren: {paper['authors']}")
+            #    print(f"    URL: {paper['url']}")
+            #    print()
+            #
+            
         except Exception as e:
             self.error.emit(str(e))
-
 
 # Backend
 class Backend(QObject):
@@ -74,7 +112,7 @@ class Backend(QObject):
     @Slot(str)
     def make_query(self, text):
         # Worker-Methode im Hintergrundthread ausführen
-        self.worker.run_query(text)
+        self.worker.make_query(text)
 
     @Slot(str)
     def on_query_finished(self, result):
