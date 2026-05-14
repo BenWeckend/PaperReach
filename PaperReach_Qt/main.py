@@ -31,11 +31,12 @@ class QueryWorker(QObject):
             client = OpenAI(
                 api_key=os.environ.get("GROQ_API_KEY"),
                 base_url="https://api.groq.com/openai/v1",
+                timeout=30,
             )
 
             response = client.responses.create(
                 input=(
-                    "Give me as output only 12 two to four word sentences, "
+                    "Give me as output only 10 two to four word sentences, "
                     "nothing more. Each text represents the following text "
                     "as best as possible. The sentences are what could be "
                     "used as part of a title of a Paper: "
@@ -49,61 +50,50 @@ class QueryWorker(QObject):
             self.finished.emit(keywords)
 
             # keywords bei jeder neuen Zeile Trennen und als Liste speichern
-            keywords_list = keywords.split("\n")
+            keywords_list = [k.strip() for k in keywords.splitlines() if k.strip()]
             print("Keywords Liste:", keywords_list)
+            self.search_paper(keywords_list)
 
-
-            for kw in keywords_list:
-                print(f"Suche nach: {kw}")
-                papers_arXiv = search_arxiv(kw)
-                print(f"Gefundene Paper aus arXiv für '{kw}':")
-                for paper in papers_arXiv:
-                    print(f"  - {paper['title']}")
-                    print(f"    Autoren: {paper['authors']}")
-                    print(f"    URL: {paper['url']}")
-                    print()
-
-            #keywords_test = "machine learning"
-            #papers_arXiv = search_arxiv(keywords_test)
-            #print("Gefundene Paper aus arXiv:")
-            #for paper in papers_arXiv:
-            #    print(f"  - {paper['title']}")
-            #    print(f"    Autoren: {paper['authors']}")
-            #    print(f"    URL: {paper['url']}")
-            #    print()
-
-            # Übergebe die Keywords an search_semantic_scholar
-            #papers = search_semantic_scholar(keywords_test)
-            #print("Gefundene Paper aus Semantic Scholar:")
-            #for paper in papers:
-            #    print(f"  - {paper['title']}")
-            #    print(f"    Autoren: {paper['authors']}")
-            #    print(f"    URL: {paper['url']}")
-            #    print()
-            #
-            
         except Exception as e:
             self.error.emit(str(e))
+
+    def search_paper(self, keywords_list):
+        for kw in keywords_list:
+            print(f"Suche nach: {kw}")
+            papers_arXiv = search_arxiv(kw)
+            print(f"Gefundene Paper aus arXiv für '{kw}':")
+            for paper in papers_arXiv:
+                print(f"  - {paper['title']}")
+                #print(f"    Autoren: {paper['authors']}")
+                print(f"    Abstract: {paper['abstract']}")
+                print(f"    URL: {paper['url']}")
+                print()
+            
+        
 
 # Backend
 class Backend(QObject):
 
     textChanged = Signal(str)
+    startQuery = Signal(str)
 
     def __init__(self):
         super().__init__()
 
         self._query_result = ""
 
-        self.thread = QThread()  # Thread erzeugen (Muss mir das mit den Threads trotzdem nochmal genauer anschauen, das ist schon etwas komplexer....)
-        self.worker = QueryWorker() # Worker erzeugen
-        self.worker.moveToThread(self.thread) # Worker in Thread verschieben
+        self.thread = QThread()
+        self.worker = QueryWorker()
 
-        # Signale verbinden
+        self.worker.moveToThread(self.thread)
+
         self.worker.finished.connect(self.on_query_finished)
         self.worker.error.connect(self.on_query_error)
 
-        self.thread.start()  # Thread starten
+        # WICHTIG
+        self.startQuery.connect(self.worker.make_query)
+
+        self.thread.start()
 
     @Property(str, notify=textChanged)
     def query_result(self):
@@ -111,8 +101,8 @@ class Backend(QObject):
 
     @Slot(str)
     def make_query(self, text):
-        # Worker-Methode im Hintergrundthread ausführen
-        self.worker.make_query(text)
+        # NICHT DIREKT AUFRUFEN
+        self.startQuery.emit(text)
 
     @Slot(str)
     def on_query_finished(self, result):
