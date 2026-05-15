@@ -19,6 +19,7 @@ from openai import OpenAI
 
 from providers.semantic_scholar import search_semantic_scholar
 from providers.arXiv import search_arxiv
+from database import create_tables, save_papers
 
 # Worker
 class QueryWorker(QObject):
@@ -36,7 +37,7 @@ class QueryWorker(QObject):
 
             response = client.responses.create(
                 input=(
-                    "Give me as output only 10 two to four word sentences, "
+                    "Give me as output only 3 two to four word sentences, "
                     "nothing more. Each text represents the following text "
                     "as best as possible. The sentences are what could be "
                     "used as part of a title of a Paper: "
@@ -62,12 +63,28 @@ class QueryWorker(QObject):
             print(f"Suche nach: {kw}")
             papers_arXiv = search_arxiv(kw)
             print(f"Gefundene Paper aus arXiv für '{kw}':")
+
             for paper in papers_arXiv:
+                save_papers(paper)
+                print(f"Gespeichert: {paper['title']}")
                 print(f"  - {paper['title']}")
                 #print(f"    Autoren: {paper['authors']}")
                 print(f"    Abstract: {paper['abstract']}")
                 print(f"    URL: {paper['url']}")
                 print()
+
+
+    def get_paper_content(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM papers")
+
+        rows = cursor.fetchall()
+
+        conn.close()
+
+        return rows
             
         
 
@@ -122,6 +139,8 @@ class Backend(QObject):
 
 
 if __name__ == "__main__":
+
+    create_tables()
 
     app = QGuiApplication(sys.argv)
 
