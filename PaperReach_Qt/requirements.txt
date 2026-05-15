@@ -1,2 +1,5 @@
 PySide6
 PyQt6
+requests
+libsqlite3-dev
+pypdf
