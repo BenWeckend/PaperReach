@@ -31,10 +31,10 @@ database "sqLite Database" as db
 [print_paper_list] <-- db
 
 
-[extract_text_from_url] --> [analyse_rate_paper_content]
-[analyse_rate_paper_content] --> [print_top_match]
-[analyse_rate_paper_content] <--> (groq API)
-[analyse_rate_paper_content] <--> db
+[extract_text_from_url] --> [analyze_paper_content]
+[analyze_paper_content] --> [print_top_match]
+[analyze_paper_content] <--> (groq API)
+[analyze_paper_content] <--> db
 
 [print_paper_list] --> client_output
 [print_query] --> client_output

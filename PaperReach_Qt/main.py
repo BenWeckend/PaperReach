@@ -19,6 +19,7 @@ from openai import OpenAI
 
 from providers.semantic_scholar import search_semantic_scholar
 from providers.arXiv import search_arxiv
+from providers.groq import execute_groq_query, analyze_paper_content
 from database import create_tables, save_papers
 
 # Worker
@@ -29,47 +30,32 @@ class QueryWorker(QObject):
     @Slot(str)
     def make_query(self, text):
         try:
-            client = OpenAI(
-                api_key=os.environ.get("GROQ_API_KEY"),
-                base_url="https://api.groq.com/openai/v1",
-                timeout=30,
-            )
-
-            response = client.responses.create(
-                input=(
-                    "Give me as output only 3 two to four word sentences, "
-                    "nothing more. Each text represents the following text "
-                    "as best as possible. The sentences are what could be "
-                    "used as part of a title of a Paper: "
-                    + text
-                ),
-                model="openai/gpt-oss-20b",
-            )
-
-            keywords = response.output_text
+            keywords = execute_groq_query(text)
             print("Generierte Keywords:", keywords)
             self.finished.emit(keywords)
 
             # keywords bei jeder neuen Zeile Trennen und als Liste speichern
             keywords_list = [k.strip() for k in keywords.splitlines() if k.strip()]
             print("Keywords Liste:", keywords_list)
-            self.search_paper(keywords_list)
+
+            self.search_paper(keywords_list, text)
 
         except Exception as e:
             self.error.emit(str(e))
 
-    def search_paper(self, keywords_list):
+    def search_paper(self, keywords_list, prompt_text):
         for kw in keywords_list:
             print(f"Suche nach: {kw}")
             papers_arXiv = search_arxiv(kw)
             print(f"Gefundene Paper aus arXiv für '{kw}':")
 
             for paper in papers_arXiv:
-                save_papers(paper)
+                save_papers(paper, prompt_text)
+
                 print(f"Gespeichert: {paper['title']}")
                 print(f"  - {paper['title']}")
                 #print(f"    Autoren: {paper['authors']}")
-                print(f"    Abstract: {paper['abstract']}")
+                #print(f"    Abstract: {paper['abstract']}")
                 print(f"    URL: {paper['url']}")
                 print()
 

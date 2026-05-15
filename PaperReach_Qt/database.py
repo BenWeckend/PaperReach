@@ -3,6 +3,8 @@ import pypdf
 import requests
 import io
 
+from providers.groq import analyze_paper_content 
+
 DB_NAME = "papers.db"
 
 def get_db_connection():
@@ -20,7 +22,8 @@ def create_tables():
             abstract TEXT,
             url TEXT,
             source TEXT,
-            pdf_content TEXT      
+            pdf_content TEXT,
+            rating INTEGER
         )
         """
     )
@@ -49,16 +52,17 @@ def extract_text_from_url(pdf_url):
         print(f"Fehler beim Download/Auslesen von {pdf_url}: {e}")
         return ""
 
-def save_papers(paper):
+def save_papers(paper, prompt_text: str = None):
     pdf_text = extract_text_from_url(paper.get("url"))
+    rating_match = analyze_paper_content(prompt_text, pdf_text)
 
     conn = get_db_connection()
     cursor = conn.cursor()
     
     cursor.execute(
         """
-        INSERT OR REPLACE INTO papers (id, title, authors, abstract, url, source, pdf_content)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO papers (id, title, authors, abstract, url, source, pdf_content, rating)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             paper["id"],
@@ -67,7 +71,8 @@ def save_papers(paper):
             paper["abstract"],
             paper["url"],
             paper["source"],
-            pdf_text
+            pdf_text,
+            rating_match
         )
     )
 
