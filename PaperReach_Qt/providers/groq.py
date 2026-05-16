@@ -10,7 +10,7 @@ def execute_groq_query(text):
 
     response = client.responses.create(
         input=(
-            "Give me as output only 3 two to four word sentences, "
+            "Give me as output only 12 two to four word sentences, "
             "nothing more. Each text represents the following text "
             "as best as possible. The sentences are what could be "
             "used as part of a title of a Paper: "
@@ -21,7 +21,7 @@ def execute_groq_query(text):
     
     return response.output_text
 
-
+# Wirtschaftlich nicht sinnvoll da das zu viele "Tokens" verbraucht
 def analyze_paper_content(text, content):
     client = OpenAI(
         api_key=os.environ.get("GROQ_API_KEY"),
