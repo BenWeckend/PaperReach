@@ -3,7 +3,7 @@ import pypdf
 import requests
 import io
 
-from providers.groq import analyze_paper_content 
+from embeddings import analyze_similarity
 
 DB_NAME = "papers.db"
 
@@ -22,8 +22,7 @@ def create_tables():
             abstract TEXT,
             url TEXT,
             source TEXT,
-            pdf_content TEXT,
-            rating INTEGER
+            rating REAL
         )
         """
     )
@@ -53,25 +52,25 @@ def extract_text_from_url(pdf_url):
         return ""
 
 def save_papers(paper, prompt_text: str = None):
-    pdf_text = extract_text_from_url(paper.get("url"))
-    rating_match = analyze_paper_content(prompt_text, pdf_text)
+    #pdf_text = extract_text_from_url(paper.get("url"))
+    #rating_match = round(float(analyze_similarity(prompt_text, pdf_text)), 2)
+    rating_match = round(float(analyze_similarity(prompt_text, paper["abstract"])), 2)
 
     conn = get_db_connection()
     cursor = conn.cursor()
     
     cursor.execute(
         """
-        INSERT OR REPLACE INTO papers (id, title, authors, abstract, url, source, pdf_content, rating)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO papers (id, title, authors, abstract, url, source, rating)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
         (
             paper["id"],
             paper["title"],
-            ", ".join(paper["authors"]),
+            paper["authors"],
             paper["abstract"],
             paper["url"],
             paper["source"],
-            pdf_text,
             rating_match
         )
     )
