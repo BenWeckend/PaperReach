@@ -295,7 +295,7 @@ Window {
                             ListView {
                                 id: resultList
                                 spacing: 10
-                                model: 10
+                                model: paperModel
                                 width: parent.width // Wichtig für die Breite der Delegates
 
                                 delegate: Rectangle {
@@ -318,19 +318,26 @@ Window {
                                         anchors.fill: parent
                                         anchors.margins: 15
 
+
                                         Text {
-                                            text: "Ergebnis Titel #" + (index + 1)
+                                            text: titel
                                             color: "#333333"
                                             font.weight: Font.Bold
                                         }
 
                                         Text {
-                                            text: "Dynamischer Text für dieses Element..."
+                                            text: abstract
                                             wrapMode: Text.WordWrap
                                             Layout.fillWidth: true
                                             color: "#666666"
                                             elide: Text.ElideRight
                                             maximumLineCount: 3
+                                        }
+
+                                        Text {
+                                            text: "Rating: " + rating
+                                            color: "#888888"
+                                            font.italic: true
                                         }
                                     }
                                 }

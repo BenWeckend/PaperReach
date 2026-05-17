@@ -2,10 +2,18 @@ import sqlite3
 import pypdf
 import requests
 import io
+import time
+
+from pathlib import Path
 
 from embeddings import analyze_similarity
 
-DB_NAME = "papers.db"
+version = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+
+db_path = Path("./databases")
+db_path.mkdir(parents=True, exist_ok=True)
+
+DB_NAME = str(db_path / f"papers_{version}.db")
 
 def get_db_connection():
     return sqlite3.connect(DB_NAME)
@@ -77,3 +85,14 @@ def save_papers(paper, prompt_text: str = None):
 
     conn.commit()
     conn.close()
+
+def return_sorted_papers():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM papers ORDER BY rating DESC")
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows

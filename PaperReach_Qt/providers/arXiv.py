@@ -7,7 +7,7 @@ ARXIV_API = "http://export.arxiv.org/api/query"
 NS = {"atom": "http://www.w3.org/2005/Atom"}
 
 
-def search_arxiv(query: str, max_results: int = 10) -> List[Dict]:
+def search_arxiv(query: str, max_results: int = 3) -> List[Dict]:
 
     params = {
         "search_query": f"all:{query}",
