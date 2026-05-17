@@ -49,18 +49,18 @@ class QueryWorker(QObject):
     def search_paper(self, keywords_list, prompt_text):
         for kw in keywords_list:
             print(f"Suche nach: {kw}")
-            papers_arXiv = search_arxiv(kw)
-            print(f"Gefundene Paper aus arXiv für '{kw}':")
-
-            for paper in papers_arXiv:
-                save_papers(paper, prompt_text)
-
-                print(f"Gespeichert: {paper['title']}")
-                print(f"  - {paper['title']}")
-                #print(f"    Autoren: {paper['authors']}")
-                #print(f"    Abstract: {paper['abstract']}")
-                print(f"    URL: {paper['url']}")
-                print()
+            #papers_arXiv = search_arxiv(kw)
+            #print(f"Gefundene Paper aus arXiv für '{kw}':")
+#
+            #for paper in papers_arXiv:
+            #    save_papers(paper, prompt_text)
+#
+            #    print(f"Gespeichert: {paper['title']}")
+            #    print(f"  - {paper['title']}")
+            #    #print(f"    Autoren: {paper['authors']}")
+            #    #print(f"    Abstract: {paper['abstract']}")
+            #    print(f"    URL: {paper['url']}")
+            #    print()
             
         self.papersUpdated.emit()
 

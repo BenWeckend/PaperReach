@@ -320,23 +320,28 @@ Window {
 
 
                                         Text {
-                                            text: titel
-                                            color: "#333333"
-                                            font.weight: Font.Bold
+                                            text: title
+                                            color: '#2a2a2a'
+                                            
                                         }
 
                                         Text {
                                             text: abstract
                                             wrapMode: Text.WordWrap
                                             Layout.fillWidth: true
-                                            color: "#666666"
+                                            color: '#424242'
                                             elide: Text.ElideRight
                                             maximumLineCount: 3
                                         }
 
                                         Text {
                                             text: "Rating: " + rating
-                                            color: "#888888"
+                                            color: Qt.rgba(
+                                                (100 - rating) / 100, // Rotanteil
+                                                rating / 100,           // Grünanteil
+                                                0,                      // Blauanteil
+                                                1.0
+                                            )
                                             font.italic: true
                                         }
                                     }

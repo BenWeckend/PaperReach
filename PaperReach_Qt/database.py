@@ -15,10 +15,10 @@ db_path.mkdir(parents=True, exist_ok=True)
 
 DB_NAME = str(db_path / f"papers_{version}.db")
 
-DB_PROVISORISCH = "./databases/papers_2026-05-17_12-15-14.db"
+DB_PROVISORISCH = "./databases/papers_2026-05-16_16-40-20.db"
 
 def get_db_connection():
-    return sqlite3.connect(DB_NAME)
+    return sqlite3.connect(DB_PROVISORISCH)
 
 def create_tables():
     conn = get_db_connection()
