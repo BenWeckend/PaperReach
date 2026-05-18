@@ -17,8 +17,9 @@ DB_NAME = str(db_path / f"papers_{version}.db")
 
 DB_PROVISORISCH = "./databases/papers_2026-05-16_16-40-20.db"
 
+
 def get_db_connection():
-    return sqlite3.connect(DB_PROVISORISCH)
+    return sqlite3.connect(DB_NAME)
 
 def create_tables():
     conn = get_db_connection()

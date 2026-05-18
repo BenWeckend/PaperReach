@@ -18,7 +18,7 @@ from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt
 
 from openai import OpenAI
 
-from providers.semantic_scholar import search_semantic_scholar
+#from providers.semantic_scholar import search_semantic_scholar
 from providers.arXiv import search_arxiv
 from providers.groq import execute_groq_query, analyze_paper_content
 from database import create_tables, save_papers, return_sorted_papers
@@ -49,18 +49,18 @@ class QueryWorker(QObject):
     def search_paper(self, keywords_list, prompt_text):
         for kw in keywords_list:
             print(f"Suche nach: {kw}")
-            #papers_arXiv = search_arxiv(kw)
-            #print(f"Gefundene Paper aus arXiv für '{kw}':")
-#
-            #for paper in papers_arXiv:
-            #    save_papers(paper, prompt_text)
-#
-            #    print(f"Gespeichert: {paper['title']}")
-            #    print(f"  - {paper['title']}")
-            #    #print(f"    Autoren: {paper['authors']}")
-            #    #print(f"    Abstract: {paper['abstract']}")
-            #    print(f"    URL: {paper['url']}")
-            #    print()
+            papers_arXiv = search_arxiv(kw)
+            print(f"Gefundene Paper aus arXiv für '{kw}':")
+
+            for paper in papers_arXiv:
+                save_papers(paper, prompt_text)
+
+                print(f"Gespeichert: {paper['title']}")
+                print(f"  - {paper['title']}")
+                #print(f"    Autoren: {paper['authors']}")
+                #print(f"    Abstract: {paper['abstract']}")
+                print(f"    URL: {paper['url']}")
+                print()
             
         self.papersUpdated.emit()
 
@@ -71,7 +71,8 @@ class PaperModel(QAbstractListModel):
     TitleRole = Qt.UserRole + 2
     AbstractRole = Qt.UserRole + 3
     UrlRole = Qt.UserRole + 4
-    RatingRole = Qt.UserRole + 5
+    SourceRole = Qt.UserRole + 5
+    RatingRole = Qt.UserRole + 6
 
     def __init__(self):
         super().__init__()
@@ -84,6 +85,7 @@ class PaperModel(QAbstractListModel):
             self.TitleRole: b'title',
             self.AbstractRole: b'abstract',
             self.UrlRole: b'url',
+            self.SourceRole: b'source',
             self.RatingRole: b'rating'
         }
 
@@ -104,6 +106,9 @@ class PaperModel(QAbstractListModel):
 
         if role == self.UrlRole:
             return paper["url"]
+
+        if role == self.SourceRole:
+            return paper["source"]
 
         if role == self.RatingRole:
             return paper["rating"]

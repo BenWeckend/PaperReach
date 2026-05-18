@@ -2,6 +2,7 @@ import time
 import xml.etree.ElementTree as ET
 from typing import Dict, List
 import requests
+import tomllib
 
 ARXIV_API = "http://export.arxiv.org/api/query"
 NS = {"atom": "http://www.w3.org/2005/Atom"}
@@ -9,7 +10,15 @@ NS = {"atom": "http://www.w3.org/2005/Atom"}
 _LAST_REQUEST_TIME = 0.0
 
 
-def search_arxiv(query: str, max_results: int = 3, max_retries: int = 2) -> List[Dict]:
+with open("./pyproject.toml", "rb") as f:
+    config = tomllib.load(f)
+
+paper_number = config["project_Variablen"]["arXiv_paper_number"]
+
+if __name__ == "__main__":
+    print(f"Anzahl der Paper, die von arXiv abgefragt werden: {paper_number}")
+
+def search_arxiv(query: str, max_results: int = 3, max_retries: int = 4) -> List[Dict]:
     global _LAST_REQUEST_TIME
 
     params = {

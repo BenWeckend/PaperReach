@@ -5,3 +5,4 @@ libsqlite3-dev
 pypdf
 scikit-learn
 sentence_transformers
+tomli
