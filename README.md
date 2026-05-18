@@ -18,11 +18,11 @@ Workflow, Idea and Todos:
     - (maybe some Citation Agend)
 3. Output Layer with UI
 
-Phase 0: Basic UI erstellen
-Phase 1: Input → Keyword Search → Querys erzeugen
-Phase 2: Papers durch die semanticscholar und arXiv API beziehen und als Liste anzeigen
-Phase 3: Inhalt der Paper auslesen und im Bezug zum gegebenden Text bewerteten lassen.
-Phase ... : Server backend aufsetzten das die API Anfragen macht und die Infos an den User weiterleitet. (So kann man den API Key nicht aus dem Binarydekompilieren)
+- Phase 0: Basic UI erstellen
+- Phase 1: Input → Keyword Search → Querys erzeugen
+- Phase 2: Papers durch die semanticscholar und arXiv API beziehen und als Liste anzeigen
+- Phase 3: Inhalt der Paper auslesen und im Bezug zum gegebenden Text bewerteten lassen.
+- Phase ... : Server backend aufsetzten das die API Anfragen macht und die Infos an den User weiterleitet. (So kann man den API Key nicht aus dem Binarydekompilieren)
 
 Code Diagramm:
 <img width="847" height="505" alt="code_diagram" src="https://github.com/user-attachments/assets/bf3495ce-c507-4ffa-88e1-b9324ed96fd8" />
