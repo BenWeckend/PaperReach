@@ -247,23 +247,89 @@ Window {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    spacing: 0
+                    spacing: 10
 
-                    // gedrücktes Paper Element von unten (1/3 der Höhe)
+                                        // gedrücktes Paper Element von unten (1/3 der Höhe)
                     Rectangle {
                         id: infoBlock
                         Layout.fillWidth: true
                         Layout.preferredHeight: parent.height / 3
-                        color: "#fdfdfd" // Leicht abgesetzte Farbe
+                        color: "#fdfdfd"
                         border.color: "#eeeeee"
+
+                        property var selectedPaper: null
+                        
+                        
+                        // Platzhalter-Text
                         Text {
                             anchors.centerIn: parent
+                            visible: infoBlock.selectedPaper === null
                             text: "Zusatzinfos erscheinen hier"
                             color: "#95a5a6"
                             font.italic: true
                         }
 
-                        // Trennlinie zum unteren Block
+                        // Inhalt wenn Paper ausgewählt ist
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 15
+                            spacing: 6
+                            visible: infoBlock.selectedPaper !== null
+
+                            Text {
+                                text: infoBlock.selectedPaper ? infoBlock.selectedPaper.title : ""
+                                font.bold: true
+                                font.pointSize: 14
+                                color: "#2a2a2a"
+                            }
+
+                            Text {
+                                text: infoBlock.selectedPaper ? infoBlock.selectedPaper.abstract : ""
+                                wrapMode: Text.WordWrap
+                                color: "#424242"
+                                Layout.fillWidth: true
+                            }
+
+                            Text {
+                                text: infoBlock.selectedPaper ? "Rating: " + infoBlock.selectedPaper.rating : ""
+                                color: "#7f8c8d"
+                                font.italic: true
+                            }
+
+                            Text {
+                                text: infoBlock.selectedPaper ? infoBlock.selectedPaper.url : ""
+                                color: "blue"
+                                font.underline: true
+                                elide: Text.ElideMiddle
+                            
+                                MouseArea {
+                                    anchors.fill: parent
+                                    // Ändert den Mauszeiger zu einer Hand
+                                    cursorShape: Qt.PointingHandCursor 
+                                    
+                                    onClicked: {
+                                        let url = parent.text; 
+                                        if (url !== "") {
+                                            Qt.openUrlExternally(url);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            Text {
+                                text: infoBlock.selectedPaper ? infoBlock.selectedPaper.source : ""
+                                color: "#7f8c8d"
+                            }
+
+                            //Text {
+                            //    text: infoBlock.selectedPaper ? infoBlock.selectedPaper.bibtex : ""
+                            //    wrapMode: Text.WordWrap
+                            //    color: "#999999"
+                            //    font.family: "monospace"
+                            //}
+                        }
+
                         Rectangle {
                             anchors.bottom: parent.bottom
                             width: parent.width
@@ -295,7 +361,7 @@ Window {
                             ListView {
                                 id: resultList
                                 spacing: 10
-                                model: 10
+                                model: paperModel
                                 width: parent.width // Wichtig für die Breite der Delegates
 
                                 delegate: Rectangle {
@@ -310,6 +376,14 @@ Window {
                                         anchors.fill: parent
                                         onClicked: {
                                             // Hier später die Logik für exra Info
+                                            infoBlock.selectedPaper = {
+                                                title: title,
+                                                abstract: abstract,
+                                                rating: rating,
+                                                url: url,
+                                                source: source,
+                                                //bibtex: bibtex
+                                            }
                                             console.log("Gedrückt auf Index: " + index)
                                         }
                                     }
@@ -318,19 +392,31 @@ Window {
                                         anchors.fill: parent
                                         anchors.margins: 15
 
+
                                         Text {
-                                            text: "Ergebnis Titel #" + (index + 1)
-                                            color: "#333333"
-                                            font.weight: Font.Bold
+                                            text: title
+                                            color: '#2a2a2a'
+                                            
                                         }
 
                                         Text {
-                                            text: "Dynamischer Text für dieses Element..."
+                                            text: abstract
                                             wrapMode: Text.WordWrap
                                             Layout.fillWidth: true
-                                            color: "#666666"
+                                            color: '#424242'
                                             elide: Text.ElideRight
                                             maximumLineCount: 3
+                                        }
+
+                                        Text {
+                                            text: "Rating: " + rating
+                                            color: Qt.rgba(
+                                                (100 - rating) / 100, // Rotanteil
+                                                rating / 100,           // Grünanteil
+                                                0,                      // Blauanteil
+                                                1.0
+                                            )
+                                            font.italic: true
                                         }
                                     }
                                 }

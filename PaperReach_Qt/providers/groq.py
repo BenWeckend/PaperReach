@@ -1,5 +1,14 @@
 import os
 from openai import OpenAI
+import tomllib
+
+with open("./pyproject.toml", "rb") as f:
+    config = tomllib.load(f)
+
+query_count = config["project_Variablen"]["query_number"]
+
+if __name__ == "__main__":
+    print(f"Anzahl der Keywords, die von GROQ generiert werden: {query_count}")
 
 def execute_groq_query(text):
     client = OpenAI(
@@ -10,7 +19,7 @@ def execute_groq_query(text):
 
     response = client.responses.create(
         input=(
-            "Give me as output only 12 two to four word sentences, "
+            f"Give me as output only {query_count} two to four word sentences, "
             "nothing more. Each text represents the following text "
             "as best as possible. The sentences are what could be "
             "used as part of a title of a Paper: "
