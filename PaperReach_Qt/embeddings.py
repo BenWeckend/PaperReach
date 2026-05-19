@@ -12,4 +12,4 @@ def analyze_similarity(text1, text2):
         [embeddings[1]]
         )[0][0]
     
-    return round(similarity * 100 + 30, 2)
+    return round(similarity * 100 + 10, 2)

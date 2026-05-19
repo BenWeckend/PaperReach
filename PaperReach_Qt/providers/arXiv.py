@@ -18,13 +18,13 @@ paper_number = config["project_Variablen"]["arXiv_paper_number"]
 if __name__ == "__main__":
     print(f"Anzahl der Paper, die von arXiv abgefragt werden: {paper_number}")
 
-def search_arxiv(query: str, max_results: int = 3, max_retries: int = 4) -> List[Dict]:
+def search_arxiv(query: str, max_retries: int = 4) -> List[Dict]:
     global _LAST_REQUEST_TIME
 
     params = {
         "search_query": f"all:{query}",
         "start": 0,
-        "max_results": max_results,
+        "max_results": paper_number,
     }
 
     # Retry Mechnismus (weil ich schon mal gesperrt wurde :D)

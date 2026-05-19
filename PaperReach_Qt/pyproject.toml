@@ -5,6 +5,6 @@ name = "PySide QtQuick Project"
 files = ["main.py", "PaperReach_Qt/Main.qml", "PaperReach_Qt/qmldir"]
 
 [project_Variablen]
-query_number = "10"
-arXiv_paper_number = 5
+query_number = "2"
+arXiv_paper_number = 2
 semScol_paper_number = 5

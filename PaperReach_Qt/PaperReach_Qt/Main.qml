@@ -259,7 +259,7 @@ Window {
 
                         property var selectedPaper: null
                         
-
+                        
                         // Platzhalter-Text
                         Text {
                             anchors.centerIn: parent
@@ -301,7 +301,21 @@ Window {
                                 color: "blue"
                                 font.underline: true
                                 elide: Text.ElideMiddle
+                            
+                                MouseArea {
+                                    anchors.fill: parent
+                                    // Ändert den Mauszeiger zu einer Hand
+                                    cursorShape: Qt.PointingHandCursor 
+                                    
+                                    onClicked: {
+                                        let url = parent.text; 
+                                        if (url !== "") {
+                                            Qt.openUrlExternally(url);
+                                        }
+                                    }
+                                }
                             }
+
 
                             Text {
                                 text: infoBlock.selectedPaper ? infoBlock.selectedPaper.source : ""
