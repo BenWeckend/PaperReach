@@ -1,32 +1,73 @@
-## PaperReach/LitAgend (intelligent systems project)
+# PaperReach — Intelligent Research Paper Discovery & Management
 
-scientific paper Research tool.
+PaperReach is a research assistance tool designed to streamline academic literature discovery and management. It integrates metadata and full-text sources (e.g., arXiv, Semantic Scholar, and CrossRef), extracts relevant information from scientific papers, and provides a desktop interface for efficiently evaluating and organizing research findings.
 
-**Idea**: Paste entire Paragraphs into the tool and it will research and rate scientific Papers that match the given claim.
+## Project Goal
 
-Workflow, Idea and Todos:
-- Will be made in Python using Qt
+The goal of PaperReach is to take research texts, claims, or document sections as input and automatically discover, rank, and prepare relevant scientific publications for further analysis.
 
-1. Input Layer (User to System)
-2. Core Layer
-    - Query-Builder
-    - Retrieval-Layer APIs:
-        - Semantic Scholar API
-        - arXiv API
-        - CrossRef API
-    - Relevance-Layer with "Claim-Matching"
-    - (maybe some Citation Agend)
-3. Output Layer with UI
+## Core Features (Planned / Implemented)
 
-- Phase 0: Basic UI erstellen
-- Phase 1: Input → Keyword Search → Querys erzeugen
-- Phase 2: Papers durch die semanticscholar und arXiv API beziehen und als Liste anzeigen
-- Phase 3: Inhalt der Paper auslesen und im Bezug zum gegebenden Text bewerteten lassen.
-- Phase ... : Server backend aufsetzten das die API Anfragen macht und die Infos an den User weiterleitet. (So kann man den API Key nicht aus dem Binarydekompilieren)
+* **Multi-source Integration:** Connects to arXiv, Semantic Scholar, CrossRef, and other academic providers.
+* **Metadata & PDF Retrieval:** Downloads and parses paper metadata and full-text content.
+* **Claim Matching & Relevance Analysis:** Evaluates how well a paper supports or relates to a given claim, question, or research topic.
+* **Embeddings & Semantic Search:** Supports vector embeddings and semantic retrieval pipelines for context-aware document discovery.
+* **Desktop GUI:** Qt-based interface for exploring search results and managing saved papers.
+* **Modular Architecture:** Clear separation of backend logic, data providers, and user interface components for easy extensibility.
 
-Code Diagramm:
-<img width="847" height="505" alt="code_diagram" src="https://github.com/user-attachments/assets/bf3495ce-c507-4ffa-88e1-b9324ed96fd8" />
+## Project Structure
 
-Basic first Project Diagramm:
-<img width="1321" height="1113" alt="Component_diagram" src="https://github.com/user-attachments/assets/52e2434f-23f2-4b7f-8776-3bb69c24fc18" />
-[UML](/pr-docs/structure_and_planning/Component_diagram.plantuml)
+* `PaperReach_Qt/` — Qt client and desktop GUI application (`main.py` is the main entry point).
+* `backend_server/` — Backend APIs, processing pipelines, and server-side components.
+* `providers/` and `PaperReach_Qt/providers/` — Adapters for external services such as arXiv, Semantic Scholar, and CrossRef.
+* `dev_tests/` — Development tests, validation scripts, and experimental prototypes.
+* `docs/` and `pr-docs/` — Project documentation, diagrams, and supporting resources.
+
+## Quick Start
+
+### Requirements
+
+* Python 3.9+
+* Optional: `virtualenv` or `venv`
+
+### Setup
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r PaperReach_Qt/requirements.txt
+```
+
+### Launch the Desktop Application
+
+```bash
+python3 PaperReach_Qt/main.py
+```
+
+> **Note:** Some features require API keys (e.g., Semantic Scholar). Never store credentials directly in source code. Use environment variables or a `.env` file in the project root instead.
+
+## Developer Notes
+
+* **Testing:** See `dev_tests/` for available test scripts and experimental notebooks.
+* **Adding Providers:** New academic sources should be implemented as provider modules under `providers/` and expose a consistent search/retrieval interface.
+* **Embeddings & Retrieval:** Embedding-related functionality is located in `PaperReach_Qt/embeddings.py` and can be adapted to different backends, including local models and third-party embedding services.
+
+## What Are Word Embeddings?
+
+Word embeddings are dense vector representations of words, sentences, or documents in a high-dimensional vector space. Instead of representing text as discrete symbols, embeddings map semantic meaning into numerical vectors:
+
+$$
+E(w) \in \mathbb{R}^d
+$$
+
+where (w) is a word (or text fragment) and (d) is the embedding dimension.
+
+Semantically similar texts are positioned close together in this vector space. Similarity is commonly measured using **cosine similarity**:
+
+$$
+\text{sim}(a,b)=\frac{a \cdot b}{|a| |b|}
+$$
+
+where (a) and (b) are embedding vectors.
+
+For example, the embeddings of *"transformer architecture"* and *"attention-based neural network"* will typically have a higher similarity score than unrelated concepts. PaperReach leverages embeddings to perform semantic search, claim matching, and relevance ranking beyond simple keyword-based retrieval.
