@@ -57,7 +57,7 @@ def search_arxiv(query: str, max_retries: int = 4) -> List[Dict]:
             print(
                 f"[ArXiv API] Fehler: {e}. Neuer Versuch in 5 Sekunden..."
             )
-            time.sleep(5)
+            time.sleep(1)
     else:
         raise RuntimeError(
             "arXiv API konnte nach mehreren Versuchen nicht erreicht werden."
