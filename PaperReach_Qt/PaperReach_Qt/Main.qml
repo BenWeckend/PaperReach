@@ -318,6 +318,7 @@ Window {
                             Text {
                                 text: infoBlock.selectedPaper ? infoBlock.selectedPaper.abstract : ""
                                 wrapMode: Text.WordWrap
+                                maximumLineCount: 7
                                 color: "#424242"
                                 Layout.fillWidth: true
                             }
