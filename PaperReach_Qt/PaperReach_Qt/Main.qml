@@ -179,6 +179,30 @@ Window {
                                 }
                             }
                         }
+
+                        component RedCheckBox : CheckBox {
+                            id: control
+                            indicator: Rectangle {
+                                implicitWidth: 20
+                                implicitHeight: 20
+                                x: control.leftPadding
+                                y: parent.height / 2 - height / 2
+                                radius: 4
+                                border.color: control.checked ? '#d44d32' : "#e6e6e6"
+                                color: control.checked ? "#d44d32" : "transparent"
+                                // Das Häkchen
+                                Rectangle {
+                                    width: 10
+                                    height: 10
+                                    x: 5
+                                    y: 5
+                                    radius: 2
+                                    color: "white"
+                                    visible: control.checked
+                                }
+                            }
+                        }
+
                         BlueCheckBox {
                             id: semScol
                             text: "Semantic Scholar"
@@ -190,6 +214,14 @@ Window {
                             text: "arXiv"
                             checked: true
                             onCheckedChanged: console.log("arXiv " + checked)
+                        }
+
+                        RedCheckBox {
+                            id: high_accuracy_id
+                            text: "High Accuracy"
+                            checked: false
+                            onCheckedChanged: backend.high_accuracy = checked
+                            //onCheckedChanged: console.log("High Accuracy " + checked)
                         }
                     }
                 }

@@ -30,9 +30,9 @@ def search_arxiv(query: str, max_retries: int = 4) -> List[Dict]:
     # Retry Mechnismus (weil ich schon mal gesperrt wurde :D)
     for attempt in range(max_retries):
         # Pause für arXiv
-        elapsed = time.time() - _LAST_REQUEST_TIME
-        if elapsed < 3.0:
-            time.sleep(3.0 - elapsed)
+        #elapsed = time.time() - _LAST_REQUEST_TIME
+        #if elapsed < 3.0:
+        #    time.sleep(3.0 - elapsed)
 
         try:
             _LAST_REQUEST_TIME = time.time()
