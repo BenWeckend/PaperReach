@@ -4,6 +4,17 @@ PaperReach is a research assistance tool designed to streamline academic literat
 
 <img width="1395" height="892" alt="Bildschirmfoto vom 2026-06-10 21-09-14" src="https://github.com/user-attachments/assets/3b28b96d-4a65-409a-b742-106bfb57f34a" />
 
+The most important feature is the ability to adjust the granularity when researching user quotes or statements in scientific papers. This works in two modes:
+
+**Standard Mode:** Leave the High Accuracy box unchecked to only compare the input with the paper's abstract.
+
+**High Accuracy Mode:** Check the box to trigger a deep analysis of the entire PDF:
+1. Downloads the PDF paper
+2. Extracts the full text
+3. Separates the text into chunks of 300 symbols
+4. Compares the semantic similarity of each chunk to the input
+5. Takes the highest score of all chunks as the final rating
+
 ## Project Goal
 
 The goal of PaperReach is to take research texts, claims, or document sections as input and automatically discover, rank, and prepare relevant scientific publications for further analysis.
