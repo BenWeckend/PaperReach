@@ -2,6 +2,8 @@
 
 PaperReach is a research assistance tool designed to streamline academic literature discovery and management. It integrates metadata and full-text sources (e.g., arXiv, Semantic Scholar, and CrossRef), extracts relevant information from scientific papers, and provides a desktop interface for efficiently evaluating and organizing research findings.
 
+<img width="1395" height="892" alt="Bildschirmfoto vom 2026-06-10 21-09-14" src="https://github.com/user-attachments/assets/3b28b96d-4a65-409a-b742-106bfb57f34a" />
+
 ## Project Goal
 
 The goal of PaperReach is to take research texts, claims, or document sections as input and automatically discover, rank, and prepare relevant scientific publications for further analysis.
