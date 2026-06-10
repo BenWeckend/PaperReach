@@ -21,6 +21,7 @@ from openai import OpenAI
 #from providers.semantic_scholar import search_semantic_scholar
 from providers.arXiv import search_arxiv
 from providers.groq import execute_groq_query, analyze_paper_content
+import database
 from database import create_tables, save_papers, return_sorted_papers
 
 # Worker
@@ -137,9 +138,12 @@ class Backend(QObject):
 
     textChanged = Signal(str)
     startQuery = Signal(str)
+    highAccuracyChanged = Signal(bool)
 
     def __init__(self):
         super().__init__()
+
+        self._high_accuracy = False
 
         self.paperModel = PaperModel()
       
@@ -164,8 +168,21 @@ class Backend(QObject):
         
         
          
+    def getHighAccuracy(self):
+        return self._high_accuracy
 
+    def setHighAccuracy(self, value):
+        if self._high_accuracy != value:
+            self._high_accuracy = value
+            database.accurate_mode = value
+            self.highAccuracyChanged.emit(value)
 
+    high_accuracy = Property(
+        bool, 
+        getHighAccuracy, 
+        setHighAccuracy, 
+        notify=highAccuracyChanged
+        )
 
     @Property(str, notify=textChanged)
     def query_result(self):

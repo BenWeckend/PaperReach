@@ -30,9 +30,9 @@ def search_arxiv(query: str, max_retries: int = 4) -> List[Dict]:
     # Retry Mechnismus (weil ich schon mal gesperrt wurde :D)
     for attempt in range(max_retries):
         # Pause für arXiv
-        elapsed = time.time() - _LAST_REQUEST_TIME
-        if elapsed < 3.0:
-            time.sleep(3.0 - elapsed)
+        #elapsed = time.time() - _LAST_REQUEST_TIME
+        #if elapsed < 3.0:
+        #    time.sleep(3.0 - elapsed)
 
         try:
             _LAST_REQUEST_TIME = time.time()
@@ -57,7 +57,7 @@ def search_arxiv(query: str, max_retries: int = 4) -> List[Dict]:
             print(
                 f"[ArXiv API] Fehler: {e}. Neuer Versuch in 5 Sekunden..."
             )
-            time.sleep(5)
+            time.sleep(1)
     else:
         raise RuntimeError(
             "arXiv API konnte nach mehreren Versuchen nicht erreicht werden."

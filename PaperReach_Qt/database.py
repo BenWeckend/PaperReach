@@ -3,18 +3,22 @@ import pypdf
 import requests
 import io
 import time
+import tomllib
 
 from pathlib import Path
-
 from embeddings import analyze_similarity
 
+accurate_mode = False  # Wenn True, wird die PDF in Chunks aufgeteilt und jeder Chunk bewertet. Ansonsten nur das Abstract.
+
+with open("./pyproject.toml", "rb") as f:
+    config = tomllib.load(f)
+
+chunk_size = config["project_Variablen"]["chunk_size"]
 version = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
 
 db_path = Path("./databases")
 db_path.mkdir(parents=True, exist_ok=True)
-
 DB_NAME = str(db_path / f"papers_{version}.db")
-
 DB_PROVISORISCH = "./databases/papers_2026-05-16_16-40-20.db"
 
 
@@ -33,7 +37,9 @@ def create_tables():
             abstract TEXT,
             url TEXT,
             source TEXT,
-            rating REAL
+            rating REAL,
+            content TEXT,
+            accurate BOOLEAN
         )
         """
     )
@@ -62,18 +68,38 @@ def extract_text_from_url(pdf_url):
         print(f"Fehler beim Download/Auslesen von {pdf_url}: {e}")
         return ""
 
+
+def create_text_chunks_and_rate(paper, prompt_text: str = None):
+    content = extract_text_from_url(paper.get("url"))
+
+    rating_list = []
+    paper_chunks = [content[i:i+chunk_size] for i in range(0, len(content), chunk_size)]
+
+    for chunk in paper_chunks:
+        chunk_rating = round(float(analyze_similarity(prompt_text, chunk)), 2)
+        rating_list.append(chunk_rating)
+
+    return max(rating_list) if rating_list else 0.0  # Rückgabe der höchsten Chunk-Rating
+
+
 def save_papers(paper, prompt_text: str = None):
-    #pdf_text = extract_text_from_url(paper.get("url"))
     #rating_match = round(float(analyze_similarity(prompt_text, pdf_text)), 2)
-    rating_match = round(float(analyze_similarity(prompt_text, paper["abstract"])), 2)
+    if accurate_mode:
+        content = extract_text_from_url(paper.get("url"))
+        rating_match = create_text_chunks_and_rate(paper, prompt_text)
+        accurate = True
+    else:
+        content = None
+        rating_match = round(float(analyze_similarity(prompt_text, paper["abstract"])), 2)
+        accurate = False
 
     conn = get_db_connection()
     cursor = conn.cursor()
     
     cursor.execute(
         """
-        INSERT OR REPLACE INTO papers (id, title, authors, abstract, url, source, rating)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO papers (id, title, authors, abstract, url, source, rating, content, accurate)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             paper["id"],
@@ -82,7 +108,9 @@ def save_papers(paper, prompt_text: str = None):
             paper["abstract"],
             paper["url"],
             paper["source"],
-            rating_match
+            rating_match,
+            content,
+            accurate
         )
     )
 
