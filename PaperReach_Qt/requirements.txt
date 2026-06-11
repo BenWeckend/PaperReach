@@ -6,3 +6,4 @@ pypdf
 scikit-learn
 sentence_transformers
 tomli
+pyinstaller

@@ -3,6 +3,8 @@ import xml.etree.ElementTree as ET
 from typing import Dict, List
 import requests
 import tomllib
+import os
+import sys
 
 ARXIV_API = "http://export.arxiv.org/api/query"
 NS = {"atom": "http://www.w3.org/2005/Atom"}
@@ -10,8 +12,19 @@ NS = {"atom": "http://www.w3.org/2005/Atom"}
 _LAST_REQUEST_TIME = 0.0
 
 
-with open("./pyproject.toml", "rb") as f:
+if hasattr(sys, '_MEIPASS'):
+    base_path = sys._MEIPASS
+else:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.dirname(current_dir) 
+
+# Erstellt den absolut sicheren Pfad zur Datei
+pyproject_path = os.path.join(base_path, "pyproject.toml")
+
+# dynamischen Pfad laden
+with open(pyproject_path, "rb") as f:
     config = tomllib.load(f)
+    pass
 
 paper_number = config["project_Variablen"]["arXiv_paper_number"]
 

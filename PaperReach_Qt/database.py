@@ -4,14 +4,29 @@ import requests
 import io
 import time
 import tomllib
+import os
+import sys
 
 from pathlib import Path
 from embeddings import analyze_similarity
 
 accurate_mode = False  # Wenn True, wird die PDF in Chunks aufgeteilt und jeder Chunk bewertet. Ansonsten nur das Abstract.
 
-with open("./pyproject.toml", "rb") as f:
+if hasattr(sys, '_MEIPASS'):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.dirname(os.path.abspath(__file__))
+
+# Erstellt den absolut sicheren Pfad zur Datei
+pyproject_path = os.path.join(base_path, "pyproject.toml")
+
+# dynamischen Pfad laden
+with open(pyproject_path, "rb") as f:
     config = tomllib.load(f)
+    pass
+
+#with open("./pyproject.toml", "rb") as f:
+#    config = tomllib.load(f)
 
 chunk_size = config["project_Variablen"]["chunk_size"]
 version = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())

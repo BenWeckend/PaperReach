@@ -30,4 +30,9 @@ docs/_build/
 docs/generated/
 docs/source/_autosummary/
 
-
+#pyinstaller stuff
+*.spec
+dist/
+build/
+torchinductor_ben/
+.build-by-inch/ 

@@ -1,9 +1,22 @@
 import os
 from openai import OpenAI
 import tomllib
+import sys
+import os
 
-with open("./pyproject.toml", "rb") as f:
+if hasattr(sys, '_MEIPASS'):
+    base_path = sys._MEIPASS
+else:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.dirname(current_dir) 
+
+# Erstellt den absolut sicheren Pfad zur Datei
+pyproject_path = os.path.join(base_path, "pyproject.toml")
+
+# dynamischen Pfad laden
+with open(pyproject_path, "rb") as f:
     config = tomllib.load(f)
+    pass
 
 query_count = config["project_Variablen"]["query_number"]
 
